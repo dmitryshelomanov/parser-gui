@@ -6,16 +6,27 @@
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
+    "effector": "^22.1.1",
+    "effector-react": "^22.0.4",
+    "evergreen-ui": "^6.5.0",
+    "htmlparser2": "^7.1.2",
+    "patronum": "^1.1.0",
+    "prettier": "^2.4.1",
     "react": "^17.0.2",
+    "react-ace": "^9.4.4",
     "react-dom": "^17.0.2",
+    "react-modal": "^3.14.3",
+    "react-router-dom": "^5.3.0",
     "react-scripts": "4.0.3",
+    "styled-components": "^5.3.1",
     "web-vitals": "^1.0.1"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test",
+    "eject": "react-app-rewired eject",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
@@ -34,5 +45,18 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/react-dom": "^17.0.9",
+    "@types/react-modal": "^3.12.1",
+    "@types/react-router-dom": "^5.3.0",
+    "@types/styled-components": "^5.1.14",
+    "cors": "^2.8.5",
+    "customize-cra": "^1.0.0",
+    "express": "^4.17.1",
+    "http-proxy": "^1.18.1",
+    "http-proxy-middleware": "^2.0.1",
+    "react-app-rewired": "^2.1.8",
+    "typescript": "^4.4.3"
   }
 }

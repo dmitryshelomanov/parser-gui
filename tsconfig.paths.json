@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./src",
+    "paths": {
+      "@gui/assets/*": ["./assets/*"],
+      "@gui/ui/*": ["./ui/*"],
+      "@gui/features/*": ["./features/*"],
+      "@gui/lib/*": ["./lib/*"],
+      "@gui/types": ["./typings"]
+    }
+  }
+}
