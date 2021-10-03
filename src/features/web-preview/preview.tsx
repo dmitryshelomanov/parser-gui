@@ -19,8 +19,15 @@ export function WebPreview() {
   const document = ref?.contentWindow?.document;
   const mountNode = ref?.contentWindow?.document?.body;
 
+  const props =
+    process.env.NODE_ENV === "development"
+      ? {}
+      : {
+          src: "https://dmitryshelomanov.github.io/",
+        };
+
   useLayoutEffect(() => {
-    if (document) {
+    if (document && process.env.NODE_ENV === "development") {
       document.write(html);
       document.close();
     }
@@ -33,6 +40,8 @@ export function WebPreview() {
   }, [mountNode, setRoot]);
 
   return (
-    <Iframe ref={setRef}>{mountNode && createPortal(jsx, mountNode)}</Iframe>
+    <Iframe ref={setRef} {...props}>
+      {mountNode && createPortal(jsx, mountNode)}
+    </Iframe>
   );
 }
