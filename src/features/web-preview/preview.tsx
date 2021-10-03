@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 import { createPortal } from "react-dom";
 import { html } from "@gui/assets/mock";
@@ -13,34 +13,31 @@ const Iframe = styled.iframe`
 
 export function WebPreview() {
   const [ref, setRef] = useState<HTMLIFrameElement | null>(null);
-  const { setRoot } = useOverlay();
+  const { setRoot, root } = useOverlay();
   const jsx = useOverlayComponent();
 
-  const document = ref?.contentWindow?.document;
-  const mountNode = ref?.contentWindow?.document?.body;
+  const mountNode = root?.body;
 
   const props =
     process.env.NODE_ENV === "development"
-      ? {}
+      ? {
+          srcDoc: html,
+        }
       : {
           src: "https://dmitryshelomanov.github.io/",
         };
 
-  useLayoutEffect(() => {
-    if (document && process.env.NODE_ENV === "development") {
-      document.write(html);
-      document.close();
-    }
-  }, [document]);
-
-  useEffect(() => {
-    if (document) {
-      setRoot(document);
-    }
-  }, [mountNode, setRoot]);
-
   return (
-    <Iframe ref={setRef} {...props}>
+    <Iframe
+      ref={setRef}
+      {...props}
+      onLoad={() => {
+        if (ref?.contentWindow?.document) {
+          console.log("load");
+          setRoot(ref?.contentWindow?.document);
+        }
+      }}
+    >
       {mountNode && createPortal(jsx, mountNode)}
     </Iframe>
   );
