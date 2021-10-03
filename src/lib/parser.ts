@@ -35,20 +35,24 @@ export function nodeParser(element: HTMLElement) {
     const nodeInfo = {
       name: node.localName || node.nodeName,
       children: [],
-      value: node.textContent ?? "",
+      value: node.textContent?.replace(/  +|\n/gi, " ")?.trim() ?? "",
       node,
       attrs,
       id,
     };
 
-    if (parentNode) {
+    const isEmpty = nodeInfo.name === "#text" && nodeInfo.value === "";
+
+    if (parentNode && !isEmpty) {
       // @ts-ignore
       parentNode.children.push(nodeInfo);
     }
 
-    map.set(node, nodeInfo);
+    if (!isEmpty) {
+      map.set(node, nodeInfo);
+    }
 
-    if (result.length === 0) {
+    if (result.length === 0 && !isEmpty) {
       result.push(nodeInfo);
     }
 
