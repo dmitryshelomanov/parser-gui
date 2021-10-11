@@ -1,6 +1,6 @@
 import { NodeParserResult } from "@gui/lib/parser";
 import { WithActivePreviewNode } from "@gui/lib/overlay";
-import { Tag, Text } from "./elements";
+import { Tag, Text, Comment } from "./elements";
 
 export type OverlayChange =
   | { type: "reset"; payload?: {} }
@@ -44,6 +44,10 @@ export function NodeTree({
 
         if (node.name === "#text") {
           return <Text text={node.value} lvl={lvl} {...props} key={node.id} />;
+        }
+
+        if (node.name === "#comment") {
+          return <Comment text={node.value} lvl={lvl} key={node.id} />;
         }
 
         return (

@@ -41,7 +41,9 @@ export function nodeParser(element: HTMLElement) {
       id,
     };
 
-    const isEmpty = nodeInfo.name === "#text" && nodeInfo.value === "";
+    const isEmpty =
+      (nodeInfo.name === "#text" || nodeInfo.name === "#comment") &&
+      nodeInfo.value === "";
 
     if (parentNode && !isEmpty) {
       // @ts-ignore

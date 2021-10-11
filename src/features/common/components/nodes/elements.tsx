@@ -16,6 +16,7 @@ const colors = {
   attributeValue: "rgb(10, 48, 105)",
   attributeKey: "#91461c",
   text: "#30373e",
+  commentColor: "green",
 };
 
 const TagWrapper = styled.div<{ lvl?: number; isActive?: boolean }>`
@@ -37,12 +38,17 @@ const TagWrapper = styled.div<{ lvl?: number; isActive?: boolean }>`
     `}
 `;
 
-const TextWrapper = styled.div<{ lvl?: number; isActive?: boolean }>`
+const TextWrapper = styled.div<{
+  lvl?: number;
+  isActive?: boolean;
+  isComment?: boolean;
+}>`
   display: block;
   margin-left: ${(p) => (p.lvl ?? 0) * tabSize}px;
   cursor: pointer;
   color: ${colors.text};
   transition: 0.2s;
+  white-space: normal;
 
   &:hover {
     background-color: #ac5c5c37;
@@ -52,6 +58,13 @@ const TextWrapper = styled.div<{ lvl?: number; isActive?: boolean }>`
     p.isActive &&
     css`
       background-color: #ac5c5c37;
+    `}
+
+  ${(p) =>
+    p.isComment &&
+    css`
+      font-size: 12px;
+      color: ${colors.commentColor};
     `}
 `;
 
@@ -122,6 +135,16 @@ export function Text({
   return (
     <TextWrapper lvl={lvl} onMouseEnter={onHover} onMouseLeave={onLeave}>
       {text}
+    </TextWrapper>
+  );
+}
+
+export function Comment({ text, lvl }: { text: string } & BaseProps) {
+  return (
+    <TextWrapper lvl={lvl} isComment>
+      {"<!-- "}
+      {text}
+      {" -->"}
     </TextWrapper>
   );
 }

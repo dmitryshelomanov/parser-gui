@@ -41,7 +41,7 @@ const block = {
 };
 
 function getRect(target: HTMLElement) {
-  if (target.nodeName === "#text") {
+  if (target.nodeName === "#text" || target.nodeName === "#comment") {
     const range = target.ownerDocument.createRange();
     range.selectNode(target);
 
