@@ -1,10 +1,4 @@
-import { NodeTree, TreeContainer } from "@gui/features/common";
-import { executeTransformer } from "@gui/lib/babel";
-import { useOverlay } from "@gui/lib/overlay";
 import Inspector from "react-inspector";
-import { nodeParser } from "@gui/lib/parser";
-import { getElementFromXPath } from "@gui/lib/xpath";
-import { Col, Row } from "@gui/ui/organisms";
 import { useStore, useStoreMap } from "effector-react";
 import {
   Pane,
@@ -16,6 +10,13 @@ import {
 } from "evergreen-ui";
 import { useState } from "react";
 import styled from "styled-components";
+import { NodeTree, TreeContainer } from "@gui/features/common";
+import { executeTransformer } from "@gui/lib/babel";
+import { defaultLibs } from "@gui/lib/codegen/libs";
+import { useOverlay } from "@gui/lib/overlay";
+import { nodeParser } from "@gui/lib/parser";
+import { getElementFromXPath } from "@gui/lib/xpath";
+import { Col, Row } from "@gui/ui/organisms";
 import { $tokens, Token, openEditor, $editors, removeToken } from "../models";
 
 const PaneUI = styled(Pane)`
@@ -47,7 +48,7 @@ const Icons = styled.div`
 `;
 
 function TokenItem({ token }: { token: Token }) {
-  const [visible, setVisible] = useState(true);
+  const [visible, setVisible] = useState(false);
   const { root } = useOverlay();
   const elements = root ? getElementFromXPath(token.xpath, root) : [];
   const parsed = elements ? nodeParser(elements) : [];
@@ -59,7 +60,11 @@ function TokenItem({ token }: { token: Token }) {
       if (editors[tokenId]) {
         const { code } = editors[tokenId];
 
-        return executeTransformer(code, nodes);
+        return executeTransformer({
+          code,
+          args: nodes,
+          libs: defaultLibs,
+        });
       }
 
       return "";

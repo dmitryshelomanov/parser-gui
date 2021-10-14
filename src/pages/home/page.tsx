@@ -28,7 +28,7 @@ const TablistUI = styled(Tablist)`
   margin: 0;
   border-bottom: 1px solid #e5e8ef;
   background-color: #fff;
-  z-index: 2;
+  z-index: 10;
   position: sticky;
   top: 0;
 `;

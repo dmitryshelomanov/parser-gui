@@ -1,14 +1,6 @@
-import { getElementFromXPath } from "../xpath";
 import { LIBS, PAGE } from "./constants";
 import { evulate, attachLibs, wrapp, returnS } from "./tokens";
-
-export function textExtractor(el: HTMLElement) {
-  return el.textContent;
-}
-
-export function classList(el: HTMLElement) {
-  return [...el.classList];
-}
+import { defaultLibs } from "./libs";
 
 function xPath() {
   const code = `
@@ -31,9 +23,9 @@ export function createExtractorsLib() {
       body: [
         evulate({
           body: [
-            attachLibs("textExtractor", textExtractor.toString()),
-            attachLibs("classList", classList.toString()),
-            attachLibs("getElementFromXPath", getElementFromXPath.toString()),
+            attachLibs("textExtractor", defaultLibs.textExtractor),
+            attachLibs("classList", defaultLibs.classList),
+            attachLibs("getElementFromXPath", defaultLibs.getElementFromXPath),
           ],
         }),
       ],

@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 type Props = {
-  jc?: "space-between" | "space-around";
+  jc?: "space-between" | "space-around" | "flex-start" | "flex-end";
   ai?: "center" | "flex-start" | "fle-end";
 };
 

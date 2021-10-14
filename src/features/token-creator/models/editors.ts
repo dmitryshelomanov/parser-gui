@@ -10,9 +10,13 @@ const initalState = {
   code: format(
     wrapp({
       name: "transformer",
-      body: ["return element.textContent"],
+      body: ["return textExtractor(element)"],
       args: ["[element]"],
-      notice: "// Код запускается на сервере принимая на вход HTMLElement[]",
+      notice: `
+        import {textExtractor} from 'gui'
+
+        // Код запускается на сервере принимая на вход HTMLElement[]
+      `,
     })
   ),
 };
