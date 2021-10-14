@@ -1,17 +1,17 @@
 {
   "files": {
-    "main.js": "/parser-gui/static/js/main.af16f1ac.chunk.js",
-    "main.js.map": "/parser-gui/static/js/main.af16f1ac.chunk.js.map",
+    "main.js": "/parser-gui/static/js/main.b5fa0016.chunk.js",
+    "main.js.map": "/parser-gui/static/js/main.b5fa0016.chunk.js.map",
     "runtime-main.js": "/parser-gui/static/js/runtime-main.3463f432.js",
     "runtime-main.js.map": "/parser-gui/static/js/runtime-main.3463f432.js.map",
-    "static/js/2.edda298c.chunk.js": "/parser-gui/static/js/2.edda298c.chunk.js",
-    "static/js/2.edda298c.chunk.js.map": "/parser-gui/static/js/2.edda298c.chunk.js.map",
+    "static/js/2.61ad048c.chunk.js": "/parser-gui/static/js/2.61ad048c.chunk.js",
+    "static/js/2.61ad048c.chunk.js.map": "/parser-gui/static/js/2.61ad048c.chunk.js.map",
     "index.html": "/parser-gui/index.html",
-    "static/js/2.edda298c.chunk.js.LICENSE.txt": "/parser-gui/static/js/2.edda298c.chunk.js.LICENSE.txt"
+    "static/js/2.61ad048c.chunk.js.LICENSE.txt": "/parser-gui/static/js/2.61ad048c.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.3463f432.js",
-    "static/js/2.edda298c.chunk.js",
-    "static/js/main.af16f1ac.chunk.js"
+    "static/js/2.61ad048c.chunk.js",
+    "static/js/main.b5fa0016.chunk.js"
   ]
 }
