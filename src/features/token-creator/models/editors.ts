@@ -1,6 +1,7 @@
 import { format } from "@gui/lib/codegen/prettier";
 import { wrapp } from "@gui/lib/codegen/tokens";
 import { createEvent, createStore } from "effector";
+import { removeToken } from "./tokens";
 
 export type Editor = { opened: boolean; code: string };
 
@@ -32,7 +33,12 @@ export const $editors = createStore<Record<string, Editor>>({})
   .on(changeCode, (state, { id, code }) => ({
     ...state,
     [id]: { ...state[id], code },
-  }));
+  }))
+  .on(removeToken, (state, name) => {
+    const { [name]: _, ...rest } = state;
+
+    return rest;
+  });
 
 export const $openedEditors = $editors.map((editors) =>
   Object.keys(editors).filter((id) => editors[id].opened)

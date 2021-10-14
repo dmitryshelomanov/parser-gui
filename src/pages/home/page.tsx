@@ -20,12 +20,17 @@ const PaneUI = styled(Pane)`
   display: flex;
   flex-direction: column;
   max-width: 50%;
+  overflow: scroll;
 `;
 
 const TablistUI = styled(Tablist)`
   padding: 13px;
   margin: 0;
   border-bottom: 1px solid #e5e8ef;
+  background-color: #fff;
+  z-index: 2;
+  position: sticky;
+  top: 0;
 `;
 
 const Title = styled(Heading)`
@@ -38,6 +43,7 @@ const Wrapper = styled.div`
   height: 100vh;
   margin: 0 16px;
   display: flex;
+  overflow: hidden;
 `;
 
 export function HomePage() {

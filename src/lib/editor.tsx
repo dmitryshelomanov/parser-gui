@@ -1,6 +1,9 @@
 import AceEditor from "react-ace";
 import "ace-builds/src-noconflict/theme-solarized_light";
 import "ace-builds/src-noconflict/mode-javascript";
+import "ace-builds/src-min-noconflict/ext-searchbox";
+import "ace-builds/src-min-noconflict/ext-language_tools";
+
 import AutoSizer from "react-virtualized-auto-sizer";
 import styled from "styled-components";
 
@@ -29,12 +32,18 @@ export function CodeEditor({
                   onChange(nextValue);
                 }
               }}
-              tabSize={2}
               style={{ width, height }}
               mode="javascript"
               theme="solarized_light"
-              name="UNIQUE_ID_OF_DIV"
+              name="editor"
               editorProps={{ $blockScrolling: true }}
+              setOptions={{
+                enableBasicAutocompletion: true,
+                enableLiveAutocompletion: true,
+                enableSnippets: false,
+                showLineNumbers: true,
+                tabSize: 2,
+              }}
             />
           );
         }}

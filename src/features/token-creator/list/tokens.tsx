@@ -12,10 +12,11 @@ import {
   ChevronRightIcon,
   ChevronUpIcon,
   EditIcon,
+  RemoveIcon,
 } from "evergreen-ui";
 import { useState } from "react";
 import styled from "styled-components";
-import { $tokens, Token, openEditor, $editors } from "../models";
+import { $tokens, Token, openEditor, $editors, removeToken } from "../models";
 
 const PaneUI = styled(Pane)`
   margin: 12px;
@@ -90,6 +91,13 @@ function TokenItem({ token }: { token: Token }) {
             ) : (
               <ChevronRightIcon onClick={toggleVisible} />
             )}
+          </Icons>
+          <Icons>
+            <RemoveIcon
+              onClick={() => {
+                removeToken(token.name);
+              }}
+            />
           </Icons>
         </Row>
       </ShortInformation>
