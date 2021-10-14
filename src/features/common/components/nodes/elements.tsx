@@ -26,6 +26,7 @@ const TagWrapper = styled.div<{ lvl?: number; isActive?: boolean }>`
   margin-left: ${(p) => (p.lvl ?? 0) * tabSize}px;
   cursor: pointer;
   transition: 0.2s;
+  font-size: 14px;
 
   &:hover {
     background-color: #ac5c5c37;
@@ -49,6 +50,7 @@ const TextWrapper = styled.div<{
   color: ${colors.text};
   transition: 0.2s;
   white-space: normal;
+  font-size: 14px;
 
   &:hover {
     background-color: #ac5c5c37;

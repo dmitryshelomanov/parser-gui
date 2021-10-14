@@ -12,8 +12,8 @@ export type NodeParserResult = {
   id: number;
 };
 
-export function nodeParser(element: HTMLElement) {
-  const queue = [element];
+export function nodeParser(elements: HTMLElement[]) {
+  const queue = [...elements];
   const result: NodeParserResult[] = [];
   const map = new WeakMap();
   let id = 0;
@@ -50,14 +50,11 @@ export function nodeParser(element: HTMLElement) {
       parentNode.children.push(nodeInfo);
     }
 
-    if (!isEmpty) {
-      map.set(node, nodeInfo);
-    }
-
-    if (result.length === 0 && !isEmpty) {
+    if (!parentNode) {
       result.push(nodeInfo);
     }
 
+    map.set(node, nodeInfo);
     queue.unshift(...[...nodes]);
 
     id += 1;

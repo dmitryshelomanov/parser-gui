@@ -10,7 +10,10 @@ export function CodePreview({ target }: { target: HTMLElement | null }) {
     null
   );
 
-  const nodeList = useMemo(() => (target ? nodeParser(target) : []), [target]);
+  const nodeList = useMemo(
+    () => (target ? nodeParser([target]) : []),
+    [target]
+  );
   const key = useMemo(() => (Math.random() * 10000).toString(), [target]);
 
   const changeOverlayStyles = useCallback(
@@ -40,7 +43,9 @@ export function CodePreview({ target }: { target: HTMLElement | null }) {
           onClick={setSelectedNode}
         />
       </TreeContainer>
-      <TokenModal onClose={() => setSelectedNode(null)} node={selectedNode} />
+      {selectedNode && (
+        <TokenModal onClose={() => setSelectedNode(null)} node={selectedNode} />
+      )}
     </>
   );
 }

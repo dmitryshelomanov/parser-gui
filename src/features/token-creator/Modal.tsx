@@ -1,10 +1,10 @@
 import { NodeParserResult } from "@gui/lib/parser";
-import { getXpathFromElement, getElementFromXPath } from "@gui/lib/xpath";
+import { getXpathFromElement, xpathTransformers } from "@gui/lib/xpath";
 import { ModalUI } from "@gui/ui/organisms";
-import { Pane, Text, Heading, Label, InlineAlert } from "evergreen-ui";
-import { useMemo } from "react";
+import { Pane, Text, Label, TextInput, Checkbox } from "evergreen-ui";
+import { useMemo, useState } from "react";
 import styled from "styled-components";
-import { NodeTree, TreeContainer } from "../common";
+import { addToken } from "./models";
 
 const PaneUI = styled(Pane)`
   display: flex;
@@ -18,9 +18,18 @@ const PaneSettings = styled(Pane)`
   padding-left: 15px;
 `;
 
-const ModalHeading = styled(Heading)`
-  padding: 15px;
+const FormWrapper = styled.div`
+  display: flex;
+  margin-top: 12px;
+  align-items: center;
+
+  > label {
+    margin: 0;
+    margin-right: 3;
+  }
 `;
+
+const { removeLast, attachAllChildren } = xpathTransformers;
 
 export function TokenModal({
   node,
@@ -29,43 +38,61 @@ export function TokenModal({
   node: NodeParserResult | null;
   onClose: () => void;
 }) {
+  const [tokenName, setTokenName] = useState("");
+  const [allChildren, setAllChildren] = useState(false);
+  const [onlyByTag, setOnlyByTag] = useState(true);
+
+  const nodetag = node && onlyByTag ? node.name : "*";
+
   const xpath = useMemo(
     () => (node ? getXpathFromElement(node.node) : ""),
     [node]
   );
 
-  const element = useMemo(
-    () => (node ? getElementFromXPath(xpath, node.node.ownerDocument) : null),
-    [xpath, node]
+  const mappedXpath = useMemo(
+    () =>
+      !allChildren ? xpath : attachAllChildren(removeLast(xpath), nodetag),
+    [allChildren, xpath, nodetag]
   );
 
-  const areEq = element === node?.node;
-
   return (
-    <ModalUI isOpened={!!node} closeModal={onClose}>
+    <ModalUI
+      isOpened={!!node}
+      closeModal={onClose}
+      onConfirm={() => {
+        addToken({ xpath: mappedXpath, name: tokenName });
+        onClose();
+      }}
+      confirmLabel="Create"
+    >
       <PaneUI>
-        <TreeContainer>
-          <ModalHeading>Preview Elements</ModalHeading>
-          {node && <NodeTree nodeList={[node]} />}
-        </TreeContainer>
         <PaneSettings>
-          <div>
-            <ModalHeading>Settings</ModalHeading>
+          <FormWrapper>
             <Label>Xpath: </Label>
-            <Text>{xpath}</Text>
-            {node && (
-              <div>
-                <InlineAlert
-                  intent={areEq ? "success" : "danger"}
-                  children={
-                    areEq
-                      ? "Элемент найден по xpath"
-                      : "Этот элемент не был найдет по xpath"
-                  }
-                />
-              </div>
-            )}
-          </div>
+            <Text>{mappedXpath}</Text>
+          </FormWrapper>
+          <FormWrapper>
+            <Label>All children from parent: </Label>
+            <Checkbox
+              checked={allChildren}
+              onChange={() => setAllChildren((prev) => !prev)}
+            />
+          </FormWrapper>
+          <FormWrapper>
+            <Label>Only by selected tag: </Label>
+            <Checkbox
+              checked={onlyByTag}
+              onChange={() => setOnlyByTag((prev) => !prev)}
+            />
+          </FormWrapper>
+          <FormWrapper>
+            <Label>Token name: </Label>
+            <TextInput
+              value={tokenName}
+              // @ts-ignore
+              onChange={(event) => setTokenName(event.target.value)}
+            />
+          </FormWrapper>
         </PaneSettings>
       </PaneUI>
     </ModalUI>

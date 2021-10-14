@@ -8,4 +8,8 @@ export const GlobalStyle = createGlobalStyle`
   #root {
     height: 100vh
   }
+
+  pre {
+    white-space: normal;
+  }
 `;

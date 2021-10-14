@@ -1,13 +1,24 @@
-export function getElementFromXPath(path: string, root: Document) {
-  const bxpath = root.evaluate(
+export function getElementFromXPath(path: string, root?: Document) {
+  const targert = root ?? document;
+  const result: HTMLElement[] = [];
+  const nodesSnapshot = document.evaluate(
     path,
-    root,
-    root,
-    XPathResult.FIRST_ORDERED_NODE_TYPE,
+    targert,
+    null,
+    XPathResult.ORDERED_NODE_SNAPSHOT_TYPE,
     null
   );
 
-  return bxpath.singleNodeValue;
+  for (var i = 0; i < nodesSnapshot.snapshotLength; i++) {
+    const node = nodesSnapshot.snapshotItem(i);
+
+    if (node) {
+      // @ts-ignore
+      result.push(node);
+    }
+  }
+
+  return result;
 }
 
 export function getXpathFromElement(el: HTMLElement): string {
@@ -33,3 +44,9 @@ export function getXpathFromElement(el: HTMLElement): string {
     (sames.length > 1 ? "[" + ([].indexOf.call(sames, el) + 1) + "]" : "")
   );
 }
+
+export const xpathTransformers = {
+  removeLast: (xpath: string) => xpath.split("/").slice(0, -1).join("/"),
+  attachAllChildren: (xpath: string, childTag?: string) =>
+    `${xpath}/${childTag ?? "*"}`,
+};
