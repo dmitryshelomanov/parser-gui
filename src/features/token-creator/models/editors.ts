@@ -37,12 +37,7 @@ export const $editors = createStore<Record<string, Editor>>({})
   .on(changeCode, (state, { id, code }) => ({
     ...state,
     [id]: { ...state[id], code },
-  }))
-  .on(removeToken, (state, name) => {
-    const { [name]: _, ...rest } = state;
-
-    return rest;
-  });
+  }));
 
 export const $openedEditors = $editors.map((editors) =>
   Object.keys(editors).filter((id) => editors[id].opened)

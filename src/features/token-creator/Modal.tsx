@@ -1,10 +1,11 @@
 import { NodeParserResult } from "@gui/lib/parser";
 import { getXpathFromElement, xpathTransformers } from "@gui/lib/xpath";
-import { ModalUI } from "@gui/ui/organisms";
-import { Pane, Text, Label, TextInput, Checkbox } from "evergreen-ui";
+import { FullToken } from "@gui/lib/gui";
+import { Col, ModalUI, Row } from "@gui/ui/organisms";
+import { Pane, Text, Label, TextInput } from "evergreen-ui";
 import { useMemo, useState } from "react";
 import styled from "styled-components";
-import { addToken } from "./models";
+import { addToken, addChildren } from "./models";
 
 const PaneUI = styled(Pane)`
   display: flex;
@@ -34,57 +35,71 @@ const { removeLast, attachAllChildren } = xpathTransformers;
 export function TokenModal({
   node,
   onClose,
+  parentToken,
+  fullXpath = "",
 }: {
   node: NodeParserResult | null;
   onClose: () => void;
+  parentToken?: FullToken;
+  fullXpath?: string;
 }) {
   const [tokenName, setTokenName] = useState("");
-  const [allChildren, setAllChildren] = useState(false);
-  const [onlyByTag, setOnlyByTag] = useState(true);
 
-  const nodetag = node && onlyByTag ? node.name : "*";
+  const xpath = useMemo(() => {
+    if (node) {
+      return getXpathFromElement(node.node);
+    }
 
-  const xpath = useMemo(
-    () => (node ? getXpathFromElement(node.node) : ""),
-    [node]
-  );
+    return "";
+  }, [node]);
 
-  const mappedXpath = useMemo(
-    () =>
-      !allChildren ? xpath : attachAllChildren(removeLast(xpath), nodetag),
-    [allChildren, xpath, nodetag]
-  );
+  const [xpathPart, setXpathPart] = useState(xpath);
 
   return (
     <ModalUI
+      width="50vw"
       isOpened={!!node}
       closeModal={onClose}
       onConfirm={() => {
-        addToken({ xpath: mappedXpath, name: tokenName });
+        if (parentToken) {
+          addChildren({
+            token: { xpath: xpathPart, name: tokenName },
+            parentId: parentToken.name,
+          });
+        } else {
+          addToken({ xpath: xpathPart, name: tokenName });
+        }
         onClose();
       }}
-      confirmLabel="Create"
+      confirmLabel={parentToken ? `Add child to ${parentToken.name}` : "Create"}
     >
       <PaneUI>
         <PaneSettings>
-          <FormWrapper>
-            <Label>Xpath: </Label>
-            <Text>{mappedXpath}</Text>
-          </FormWrapper>
-          <FormWrapper>
-            <Label>All children from parent: </Label>
-            <Checkbox
-              checked={allChildren}
-              onChange={() => setAllChildren((prev) => !prev)}
-            />
-          </FormWrapper>
-          <FormWrapper>
-            <Label>Only by selected tag: </Label>
-            <Checkbox
-              checked={onlyByTag}
-              onChange={() => setOnlyByTag((prev) => !prev)}
-            />
-          </FormWrapper>
+          <Col>
+            {node && (
+              <Row>
+                <Label>Classes: </Label>
+                <Text>
+                  {JSON.stringify(
+                    node.attrs.find((it) => it.name === "class")?.value
+                  )}
+                </Text>
+              </Row>
+            )}
+            <Row>
+              <Label>Full Xpath: </Label>
+              <Text>{xpathPart}</Text>
+            </Row>
+            <FormWrapper>
+              <Label>Custom Xpath: </Label>
+              <TextInput
+                value={xpathPart}
+                // @ts-ignore
+                onChange={(event) => setXpathPart(event.target.value)}
+                placeholder="Xpath part"
+              />
+            </FormWrapper>
+          </Col>
           <FormWrapper>
             <Label>Token name: </Label>
             <TextInput

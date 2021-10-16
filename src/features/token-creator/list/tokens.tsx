@@ -1,5 +1,4 @@
-import Inspector from "react-inspector";
-import { useStore, useStoreMap } from "effector-react";
+import { useStore } from "effector-react";
 import {
   Pane,
   Text,
@@ -8,24 +7,35 @@ import {
   EditIcon,
   RemoveIcon,
 } from "evergreen-ui";
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import styled from "styled-components";
 import { NodeTree, TreeContainer } from "@gui/features/common";
-import { executeTransformer } from "@gui/lib/babel";
-import { defaultLibs } from "@gui/lib/codegen/libs";
 import { useOverlay } from "@gui/lib/overlay";
-import { nodeParser } from "@gui/lib/parser";
+import { nodeParser, NodeParserResult } from "@gui/lib/parser";
 import { getElementFromXPath } from "@gui/lib/xpath";
+import { FullToken, tree } from "@gui/lib/gui";
 import { Col, Row } from "@gui/ui/organisms";
-import { $tokens, Token, openEditor, $editors, removeToken } from "../models";
+import { TokenModal } from "../Modal";
+import { openEditor, $tokensTree, removeToken } from "../models";
+import { Notice } from "./Notice";
+import { ChildTypesSelect } from "./childTypeSelect";
+
+const TokensWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: relative;
+  overflow: scroll;
+`;
 
 const PaneUI = styled(Pane)`
-  margin: 12px;
-  padding: 12px;
+  margin: 5px;
+  padding: 8px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-direction: column;
+  background: #fff !important;
 `;
 
 const ShortInformation = styled(Row)`
@@ -47,29 +57,18 @@ const Icons = styled.div`
   cursor: pointer;
 `;
 
-function TokenItem({ token }: { token: Token }) {
+const ChildrenWrapper = styled.div`
+  width: 100%;
+`;
+
+function TokenItem({ token }: { token: FullToken }) {
   const [visible, setVisible] = useState(false);
-  const { root } = useOverlay();
-  const elements = root ? getElementFromXPath(token.xpath, root) : [];
+  const { root, changeOverlayStyles } = useOverlay();
+  const elements = root ? getElementFromXPath(token.fullXpath, root) : [];
   const parsed = elements ? nodeParser(elements) : [];
-
-  const code = useStoreMap({
-    store: $editors,
-    keys: [token.name, elements],
-    fn: (editors, [tokenId, nodes]) => {
-      if (editors[tokenId]) {
-        const { code } = editors[tokenId];
-
-        return executeTransformer({
-          code,
-          args: nodes,
-          libs: defaultLibs,
-        });
-      }
-
-      return "";
-    },
-  });
+  const [selectedNode, setSelectedNode] = useState<NodeParserResult | null>(
+    null
+  );
 
   const toggleVisible = () => {
     setVisible((prev) => !prev);
@@ -79,17 +78,17 @@ function TokenItem({ token }: { token: Token }) {
     <PaneUI border="default" key={token.name}>
       <ShortInformation>
         <Col>
-          <Text>Token name: {token.name}</Text>
-          <Text>Xpath: {token.xpath}</Text>
+          <Text>
+            Token name: <b>{token.name}</b>
+          </Text>
+          <Text>
+            Xpath: <b>{token.xpath}</b>
+          </Text>
+          <Text>
+            Children count: <b>{elements.length}</b>
+          </Text>
         </Col>
-        <Row>
-          <Icons>
-            <EditIcon
-              onClick={() => {
-                openEditor(token.name);
-              }}
-            />
-          </Icons>
+        <Row ai="center">
           <Icons>
             {visible ? (
               <ChevronUpIcon onClick={toggleVisible} />
@@ -100,35 +99,66 @@ function TokenItem({ token }: { token: Token }) {
           <Icons>
             <RemoveIcon
               onClick={() => {
-                removeToken(token.name);
+                removeToken({ id: token.name, parentId: token.parentId });
               }}
             />
           </Icons>
         </Row>
       </ShortInformation>
+      <ChildrenWrapper>
+        {token.children &&
+          token.children.map((it) => <TokenItem token={it} key={it.name} />)}
+      </ChildrenWrapper>
       {visible && (
         <Additional>
           {parsed && (
             <TreeContainer>
-              <NodeTree draft nodeList={parsed} />
+              <NodeTree
+                draft
+                nodeList={parsed}
+                onClick={setSelectedNode}
+                changeOverlayStyles={changeOverlayStyles}
+              />
             </TreeContainer>
           )}
-          <Text>Result: </Text>
-          <Inspector data={{ [token.name]: code }} expandLevel={10} />
         </Additional>
+      )}
+      {selectedNode && (
+        <TokenModal
+          onClose={() => setSelectedNode(null)}
+          node={selectedNode}
+          parentToken={token}
+          fullXpath={token.fullXpath}
+        />
       )}
     </PaneUI>
   );
 }
 
 export function TokensList() {
-  const tokens = useStore($tokens);
+  const { root } = useOverlay();
+  const tokensTree = useStore($tokensTree);
+
+  const elementFinder = useCallback(
+    (xpath: string) => (root ? getElementFromXPath(xpath, root) : []),
+    [root]
+  );
+
+  const result = useMemo(
+    () =>
+      tree.traverse(tokensTree, {
+        mapper: (elements) => elements.map((it) => it.textContent),
+        finderByXpath: elementFinder,
+      }),
+    [elementFinder, tokensTree]
+  );
 
   return (
-    <>
-      {tokens.map((token) => (
+    <TokensWrapper>
+      {tokensTree.map((token) => (
         <TokenItem token={token} key={token.name} />
       ))}
-    </>
+      <Notice result={result} />
+    </TokensWrapper>
   );
 }

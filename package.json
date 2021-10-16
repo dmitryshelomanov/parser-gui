@@ -24,6 +24,7 @@
     "react-modal": "^3.14.3",
     "react-router-dom": "^5.3.0",
     "react-scripts": "4.0.3",
+    "react-split-pane": "^0.1.92",
     "react-virtualized-auto-sizer": "^1.0.6",
     "styled-components": "^5.3.1",
     "web-vitals": "^1.0.1"
@@ -54,6 +55,7 @@
     ]
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.175",
     "@types/react-dom": "^17.0.9",
     "@types/react-inspector": "^4.0.2",
     "@types/react-modal": "^3.12.1",

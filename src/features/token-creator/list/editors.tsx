@@ -7,7 +7,7 @@ import {
   ChevronDownIcon,
   ChevronRightIcon,
 } from "evergreen-ui";
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import styled from "styled-components";
 import Incpector from "react-inspector";
 import { TreeContainer, NodeTree } from "@gui/features/common";
@@ -18,7 +18,7 @@ import { executeTransformer } from "@gui/lib/babel";
 import { defaultLibs } from "@gui/lib/codegen/libs";
 import { getElementFromXPath } from "@gui/lib/xpath";
 import { Col, Row } from "@gui/ui/organisms";
-import { $editors, changeCode, closeEditor, $tokens } from "../models";
+import { $editors, changeCode, closeEditor, $tokensScheme } from "../models";
 
 const EditorWrapper = styled(Col)`
   width: 100%;
@@ -47,15 +47,15 @@ export function CloseEditorIcon({ id }: { id: string }) {
   );
 }
 
-function Notice({ id }: { id: string }) {
+const Notice = memo(({ id }: { id: string }) => {
   const [opened, setOpened] = useState(true);
   const [result, setResult] = useState(null);
-  const { root } = useOverlay();
+  const { root, changeOverlayStyles } = useOverlay();
 
   const token = useStoreMap({
-    store: $tokens,
+    store: $tokensScheme,
     keys: [id],
-    fn: (tokens, [tokenId]) => tokens.find((it) => it.name === tokenId) ?? null,
+    fn: (tokens, [tokenId]) => tokens[tokenId] ?? null,
   });
 
   const { xpath = "" } = token ?? {};
@@ -102,18 +102,21 @@ function Notice({ id }: { id: string }) {
           <Col>
             {result && (
               <InspectorWrapper>
-                <Incpector data={{ [id]: result }} />
+                <Incpector data={{ [id]: result }} expandLevel={1} />
               </InspectorWrapper>
             )}
             <TreeContainer>
-              <NodeTree nodeList={nodes} />
+              <NodeTree
+                nodeList={nodes}
+                changeOverlayStyles={changeOverlayStyles}
+              />
             </TreeContainer>
           </Col>
         </>
       )}
     </NoticeWrapper>
   );
-}
+});
 
 export function TokenEditor({ id }: { id: string }) {
   const parsedId = id.split("-")[1];

@@ -9,8 +9,15 @@ import {
   useState,
 } from "react";
 
-const overlayContext = createContext({} as Omit<OverlayResult, "overlay">);
+export type OverlayChange =
+  | { type: "reset"; payload?: {} }
+  | { type: "set"; payload: HTMLElement };
+
+const overlayContext = createContext(
+  {} as Omit<OverlayResult, "overlay" | "targetElement">
+);
 const overlayComponentContext = createContext<JSX.Element | null>(null);
+const overlayTargetContext = createContext<HTMLElement | null>(null);
 
 export type OverlayResult = {
   overlay: JSX.Element;
@@ -23,6 +30,7 @@ export type OverlayResult = {
   resetStyles: () => void;
   root?: Document;
   targetElement: HTMLElement | null;
+  changeOverlayStyles: (arg0: OverlayChange) => void;
 };
 
 type OverlayParams = {
@@ -152,20 +160,35 @@ export function OverlayProvider({
   const { overlay, setRoot, setStyles, resetStyles, root, targetElement } =
     useOverlayFacade(props);
 
+  const changeOverlayStyles = useCallback(
+    (action: OverlayChange) => {
+      if (action.type === "set") {
+        const next = getElementBounging(action.payload);
+
+        setStyles((prev) => ({ ...prev, ...next }));
+      } else {
+        resetStyles();
+      }
+    },
+    [setStyles, resetStyles]
+  );
+
   const omittedOverlay = useMemo(() => {
     return {
       setRoot,
       setStyles,
       resetStyles,
       root,
-      targetElement,
+      changeOverlayStyles,
     };
-  }, [setRoot, setStyles, resetStyles, root, targetElement]);
+  }, [setRoot, setStyles, resetStyles, root, changeOverlayStyles]);
 
   return (
     <overlayContext.Provider value={omittedOverlay}>
       <overlayComponentContext.Provider value={overlay}>
-        {children}
+        <overlayTargetContext.Provider value={targetElement}>
+          {children}
+        </overlayTargetContext.Provider>
       </overlayComponentContext.Provider>
     </overlayContext.Provider>
   );
@@ -175,6 +198,12 @@ export function useOverlay() {
   const overlay = useContext(overlayContext);
 
   return overlay;
+}
+
+export function useOverlayTargetElement() {
+  const target = useContext(overlayTargetContext);
+
+  return target;
 }
 
 export function useOverlayComponent() {
@@ -201,7 +230,7 @@ export function WithActivePreviewNode({
   children: (arg0: boolean) => JSX.Element;
   currentNode: HTMLElement;
 }) {
-  const { targetElement } = useOverlay();
+  const targetElement = useOverlayTargetElement();
 
   return (
     <ActiveNodeGuard isActive={currentNode === targetElement}>

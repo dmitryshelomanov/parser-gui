@@ -1,14 +1,10 @@
 export const html = `
-
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" />
-  <link rel="stylesheet" href="style.css" />
+<html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+  <link rel="stylesheet" href="style.css">
   <title>CV</title>
 </head>
 
@@ -16,7 +12,7 @@ export const html = `
   <canvas></canvas>
   <div class="container">
     <div class="bio">
-      <img src="avatar.jpg" draggable="false" />
+      <img src="avatar.jpg" draggable="false">
       <div class="position">
         <h1>Шеломанов Дмитрий</h1>
         <p>Frontend engineer</p>
@@ -39,7 +35,7 @@ export const html = `
           <ul>
             <li>Разработка мобильной и десктопной версии сайта</li>
             <li>
-              Разработка SDK для написания таких же букмекерских контор </br>
+              Разработка SDK для написания таких же букмекерских контор <br>
               (Можно подключать логику и кастомизировать, не важно что отвечает за рендер)
             </li>
             <li>Внедрил ревью кода и фиче бранчи</li>
@@ -233,6 +229,6 @@ export const html = `
       </div>
     </div>
   </div>
-</body>
-</html>
+
+</body></html>
 `;

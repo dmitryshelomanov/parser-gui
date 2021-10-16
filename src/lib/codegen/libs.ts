@@ -15,7 +15,7 @@ export function $element(element: HTMLElement, selector: string) {
     return findedElement;
   }
 
-  throw new Error("element not fined");
+  throw new Error("element not fined: " + selector);
 }
 
 export function $$element(element: HTMLElement, selector: string) {

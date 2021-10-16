@@ -6,15 +6,18 @@ export function ModalUI({
   closeModal,
   onConfirm,
   confirmLabel,
+  width,
 }: {
   children: JSX.Element;
   closeModal: () => void;
   isOpened: boolean;
   onConfirm?: () => void;
   confirmLabel?: string;
+  width?: string;
 }) {
   return (
     <Dialog
+      width={width}
       confirmLabel={confirmLabel}
       isShown={isOpened}
       title="Token settings"

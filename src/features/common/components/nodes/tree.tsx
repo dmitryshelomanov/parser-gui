@@ -1,10 +1,6 @@
 import { NodeParserResult } from "@gui/lib/parser";
-import { WithActivePreviewNode } from "@gui/lib/overlay";
+import { WithActivePreviewNode, OverlayChange } from "@gui/lib/overlay";
 import { Tag, Text, Comment } from "./elements";
-
-export type OverlayChange =
-  | { type: "reset"; payload?: {} }
-  | { type: "set"; payload: HTMLElement };
 
 export function NodeTree({
   nodeList,
@@ -22,25 +18,23 @@ export function NodeTree({
   return (
     <>
       {nodeList.map((node) => {
-        const props = draft
-          ? {}
-          : {
-              onHover: () => {
-                if (changeOverlayStyles) {
-                  changeOverlayStyles({ type: "set", payload: node.node });
-                }
-              },
-              onLeave: () => {
-                if (changeOverlayStyles) {
-                  changeOverlayStyles({ type: "reset" });
-                }
-              },
-              onClick: () => {
-                if (onClick) {
-                  onClick(node);
-                }
-              },
-            };
+        const props = {
+          onHover: () => {
+            if (changeOverlayStyles) {
+              changeOverlayStyles({ type: "set", payload: node.node });
+            }
+          },
+          onLeave: () => {
+            if (changeOverlayStyles) {
+              changeOverlayStyles({ type: "reset" });
+            }
+          },
+          onClick: () => {
+            if (onClick) {
+              onClick(node);
+            }
+          },
+        };
 
         if (node.name === "#text") {
           return <Text text={node.value} lvl={lvl} {...props} key={node.id} />;
