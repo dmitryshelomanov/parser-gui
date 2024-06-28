@@ -1,17 +1,17 @@
 {
   "files": {
-    "main.js": "/parser-gui/static/js/main.fa413ab3.chunk.js",
-    "main.js.map": "/parser-gui/static/js/main.fa413ab3.chunk.js.map",
-    "runtime-main.js": "/parser-gui/static/js/runtime-main.3463f432.js",
-    "runtime-main.js.map": "/parser-gui/static/js/runtime-main.3463f432.js.map",
-    "static/js/2.aa062371.chunk.js": "/parser-gui/static/js/2.aa062371.chunk.js",
-    "static/js/2.aa062371.chunk.js.map": "/parser-gui/static/js/2.aa062371.chunk.js.map",
+    "main.js": "/parser-gui/static/js/main.d4e5ab61.chunk.js",
+    "main.js.map": "/parser-gui/static/js/main.d4e5ab61.chunk.js.map",
+    "runtime-main.js": "/parser-gui/static/js/runtime-main.f42cbfe4.js",
+    "runtime-main.js.map": "/parser-gui/static/js/runtime-main.f42cbfe4.js.map",
+    "static/js/2.aed796b5.chunk.js": "/parser-gui/static/js/2.aed796b5.chunk.js",
+    "static/js/2.aed796b5.chunk.js.map": "/parser-gui/static/js/2.aed796b5.chunk.js.map",
     "index.html": "/parser-gui/index.html",
-    "static/js/2.aa062371.chunk.js.LICENSE.txt": "/parser-gui/static/js/2.aa062371.chunk.js.LICENSE.txt"
+    "static/js/2.aed796b5.chunk.js.LICENSE.txt": "/parser-gui/static/js/2.aed796b5.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.3463f432.js",
-    "static/js/2.aa062371.chunk.js",
-    "static/js/main.fa413ab3.chunk.js"
+    "static/js/runtime-main.f42cbfe4.js",
+    "static/js/2.aed796b5.chunk.js",
+    "static/js/main.d4e5ab61.chunk.js"
   ]
 }
